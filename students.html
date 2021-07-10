@@ -1,0 +1,126 @@
+{% extends "home.html" %}
+
+{% block head %}
+    <link rel="https://cdnjs.cloudflare.com/ajax/libs/ajax-bootstrap-select/1.4.5/js/ajax-bootstrap-select.min.js">
+
+{% endblock %}
+{% block body %}
+
+<form >
+    <br>
+    <div class="container" >
+        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.."
+                title="Type in a name" class="container">
+    </div>
+    <br>
+<div class="container-fluid">
+    <table class="table" id="myTable" >
+         <thead class="thead-dark">
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Father Name</th>
+                    <th scope="col">CNIC</th>
+                    <th scope="col">Roll#</th>
+                </tr>
+            </thead>
+            <tbody>
+                    {% for item in data %}
+                <tr  class="Data">
+                    <td scope="row"  >{{ item.student_id }}</td>
+                    <td >{{ item.student_name }}</td>
+                    <td >{{ item.student_father }}</td>
+                    <td >{{ item.student_cnic }}</td>
+                    <td >{{ item.student_roll_number }}</td>
+                </tr>
+
+                    {% endfor %}
+            </tbody>
+    </table>
+</div>
+</form>
+
+
+
+<script>
+$(document).ready(function(){
+  const Members = new Array();
+  var dict = {"Member1": "M1","Member2": "M2","Member3": "M3"};
+  var pageURL = $(location).attr("href");
+  path = pageURL.slice(22,40);
+    var dictpath = { "path" : path };
+   const DataLIst = new Array();
+  $(".Data").click(function()
+  {
+    if( Members.length <= 2 )
+    {
+        var value = this.innerText;
+        value2 = value.split("\t");
+        if (confirm("You selected : " + value2[1]))
+        {
+            Members.push(value);
+            $(this).hide();
+            if( Members.length == 3)
+            {
+                dict.Member1 = Members[0];
+                dict.Member2 = Members[1];
+                dict.Member3 = Members[2];
+                DataList = [ dict, dictpath ];
+               if(confirm("Team is completed, Press OK to proceed!"))
+               {
+                    myJsonObj = JSON.stringify(DataList);
+                    $.ajax
+                    ({
+
+                        type: 'POST',
+                        url: path,
+                        data: myJsonObj,
+                        dataType: 'json',
+                        contentType: 'application/json; charset=utf-8',
+                        success: function(result) {
+                            console.log(result); }
+                    });
+                    window.location.replace("/supervisor");
+               }
+            }
+        }
+        else
+        {
+            alert("Request canceled, you can other members. ");
+        }
+
+    }
+    else
+    {
+        alert("Team is already Full,:" );
+    }
+  });
+});
+
+</script>
+
+<script>
+function myFunction() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[1];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+</script>
+
+
+{% endblock %}
+
+

@@ -1,0 +1,143 @@
+{% extends "home.html" %}
+
+{% block head %}
+{% endblock %}
+{% block body %}
+<form >
+    <br>
+    <div class="container" >
+        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.."
+                title="Type in a name" class="container">
+    </div>
+    <br>
+<div class="container-fluid">
+    <table class="table" id="staffTable" >
+         <thead class="thead-dark">
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Designation</th>
+                    <th scope="col">Teacher Type</th>
+                    <th scope="col">Permanant</th>
+                </tr>
+            </thead>
+            <tbody>
+                    {% for item in data %}
+                <tr  class="Data">
+                    <td scope="row"  >{{ item.teacher_name }}</td>
+                    <td >{{ item.teacher_designation }}</td>
+                    <td >{{ item.teacher_type }}</td>
+                    {% if item.teacher_permanant == True %}
+                    <td > Yes </td>
+                    {% else %}
+                    <td > No </td>
+                    {% endif %}
+                </tr>
+                    {% endfor %}
+            </tbody>
+    </table>
+</div>
+</form>
+<div id="id">
+    <!-- The Modal -->
+  <div class="modal fade" id="myModal">
+    <div class="modal-dialog">
+      <div class="modal-content">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+          <h6 class="modal-title">Project Title <b>HOME Automation </b></h6>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="modal-body">
+          <div class= "container=fluid">
+          	<h5>Team is underthe supervison Dr Shumail</h5>
+          </div>
+          <div class="container-fluid">
+          <table>
+          	<thead clsss="thead-dark">
+            	<tr>
+                	<th>name</th>
+                    <th>father</th>
+                    <th>role</th>
+                </tr>
+            </thead>
+            <tbody>
+            	<tr>
+                	<td>me</td>
+                    <td>abs</td>
+                    <td>df</td>
+                <tr>
+            <tbody>
+          </table>
+          </div>
+        </div>
+
+        <!-- Modal footer -->
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+$(document).ready(function()
+{
+  var dict = {"Supervisor" : ""};
+  $(".Data").click(function()
+  {
+        var value = this.innerText;
+        value2 = value.split("\t");
+        if (confirm("You selected : " + value2[0] ))
+        {
+
+            dict.Supervisor = value;
+            $(this).hide();
+            myJsonObj = JSON.stringify(dict);
+            $.ajax
+            ({
+                type: 'POST',
+                url: "/supervisor",
+                data: myJsonObj,
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                success: function(result) {
+                console.log(result); }
+            });
+            window.location.replace("/team");
+        }
+        else
+        {
+            alert("Request canceled, you can other members. ");
+        }
+  });
+});
+
+</script>
+
+<script>
+function myFunction() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("staffTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+</script>
+
+{% endblock %}

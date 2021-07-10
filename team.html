@@ -1,0 +1,96 @@
+{% extends "home.html" %}
+
+{% block head %}
+{% endblock %}
+{% block body %}
+<form>
+    <div class="container">
+        <h5 align="center"> Project Title </h5>
+        <input type="text" class="form-control" id="usr" required align="center" value="Project" >
+    </div>
+    <div>
+        <h5 align="center">Supervisor</h5>
+        <h3 align="center"> {{ SPD[0][0] }} {{ SPD[0][1] }}</h3>
+    </div>
+    <div class="container">
+        <table class="table-hover table table-lg" align="center" >
+            <thead>
+                <tr>
+                    <th>Roll#</th>
+                    <th>Name</th>
+                    <th>Position</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr id="mem1">
+                    <td>{{ MD[0][4] }}</td>
+                    <td>{{ MD[0][1] }}</td>
+                    <td>
+                        <div class="form-group">
+                            <select class="form-control" id="pos1"  required>
+                                <option value="Member">Member</option>
+                                <option value="Leader">Leader</option>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="mem2">
+                    <td>{{ MD[1][4] }}</td>
+                    <td>{{ MD[1][1] }}</td>
+                    <td>
+                        <div class="form-group">
+                            <select class="form-control" id="pos2"   required >
+                                <option value="Member">Member</option>
+                                <option value="Leader">Leader</option>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+                <tr id="mem3">
+                    <td>{{ MD[2][4] }}</td>
+                    <td>{{ MD[2][1] }}</td>
+                    <td>
+                        <div class="form-group">
+                            <select class="form-control" id="pos3"  required>
+                                <option value="Member">Member</option>
+                                <option value="Leader">Leader</option>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="container">
+    <div class="row">
+        <div class="col-md-12 bg-light">
+            <button type="submit" class="btn btn-primary" onclick="Clicked()">Save</button>
+        </div>
+    </div>
+</div>
+</form>
+
+<script>
+    function Clicked()
+    {
+        var dict = {"Project": "None", "Mem1": "None", "Mem2": "None", "Mem3": "None",}
+        dict.Project = document.getElementById("usr").value;
+        dict.Mem1 = document.getElementById("pos1").value;
+        dict.Mem2 = document.getElementById("pos2").value;
+        dict.Mem3 = document.getElementById("pos3").value;;
+        myJsonObj = JSON.stringify(dict);
+        $.ajax
+        ({
+                type: 'POST',
+                url: "/team",
+                data: myJsonObj,
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                success: function(result) {
+                console.log(result); }
+         });
+         alert("Data saved");
+         window.location.replace("/home");
+    }
+</script>
+{% endblock %}
